@@ -5,8 +5,7 @@
 #ifndef GROUP4_HEADER_REQUESTHANDLER_H_
 #define GROUP4_HEADER_REQUESTHANDLER_H_
 
-#include <memory.h>
-
+#include <memory>
 #include <string>
 #include <unordered_map>
 
