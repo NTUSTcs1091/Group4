@@ -5,8 +5,10 @@
 #ifndef GROUP4_SRC_REQUESTPARSER_H_
 #define GROUP4_SRC_REQUESTPARSER_H_
 
-#include "OperateData.h"
+#include <string>
 #include <memory>
+
+#include "OperateData.h"
 
 //used to make request string to OperateData(JSON like) format.
 //string requestStr = "GET /?token=111 HTTP/1.1\n"
@@ -16,9 +18,7 @@ class RequestParser
 {
 public:
     //singleton code convention method.
-    static unique_ptr<RequestParser> Get();
-    //give request string return header
-    unique_ptr<OperateData> ParseHeader(const std::string &request);
+    static unique_ptr<RequestParser> GetInstance();
     //give request string return body / data
     unique_ptr<OperateData> ParseData(const std::string &request);
 private:
