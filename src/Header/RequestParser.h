@@ -18,12 +18,14 @@ class RequestParser
 {
 public:
     //singleton code convention method.
-    static unique_ptr<RequestParser> GetInstance();
+    static RequestParser* GetInstance();
     //give request string return body / data
     unique_ptr<OperateData> ParseData(const std::string &request);
-private:
+protected:
     //singleton code convention method.
     RequestParser();
+private:
+    static RequestParser* only_request_parser;
 };
 
 #endif
