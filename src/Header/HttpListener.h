@@ -10,12 +10,12 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 
-#include <function>
+#include <functional>
 #include <thread>
 
-#include "MainManager.h"
+//#include "MainManager.h"
 
-class MainManager;
+// class MainManager;
 
 // Listen specific port and will callback MainManager function when receive
 // request
@@ -41,17 +41,21 @@ class HttpListener {
   HttpListener(HttpListener &cpy) = delete;
   HttpListener &operator=(const HttpListener &cpy) = delete;
 
- private:
+ protected:
   // Singleton code convention
   HttpListener();
+
+ private:
   // will be used when listen port got message, then do callback with file
   // descriptor and message, which will be read to string directly. each
   // listened message must pass through callback.
   std::function<void(const int &, const std::string &)> callback;
   // record client
   int client_fd;
+  int server_fd;
   bool start_listen;
-  std::thread listen_thread;
-}
+  std::shared_ptr<std::thread> listen_thread;
+  static HttpListener *only_http_listener;
+};
 
 #endif
