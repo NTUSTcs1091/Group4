@@ -13,10 +13,6 @@
 #include <functional>
 #include <thread>
 
-//#include "MainManager.h"
-
-// class MainManager;
-
 // Listen specific port and will callback MainManager function when receive
 // request
 class HttpListener {
@@ -46,10 +42,9 @@ class HttpListener {
   HttpListener();
 
  private:
-  // will be used when listen port got message, then do callback with file
-  // descriptor and message, which will be read to string directly. each
-  // listened message must pass through callback.
-  std::function<void(const int &, const std::string &)> callback;
+  // will be used when listen port accept connection, throwing file descriptor
+  // to new process. listened message must pass through callback.
+  std::function<void(const int &)> callback;
   // record client
   int client_fd;
   int server_fd;
