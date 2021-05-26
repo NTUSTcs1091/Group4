@@ -28,7 +28,7 @@ class RequestHandler {
   // content of request
   std::unique_ptr<OperateData> data;
   // storing all feature api
-  static const std::unordered_map<std::string, APIHandler &> apis;
+  static std::unordered_map<std::string, APIHandler *> apis;
 
  private:
   // file descriptor from httpListener, which will keep receiving request from
