@@ -5,6 +5,7 @@
 #ifndef GROUP4_HEADER_APIHANDLER_H_
 #define GROUP4_HEADER_APIHANDLER_H_
 
+#include <memory>
 #include <string>
 
 #include "OperateData.h"
@@ -14,7 +15,9 @@ class APIHandler {
  public:
   APIHandler();
   // the start entry of all api services
-  virtual void CallingAPI(const OperateData& data);
+  // operate data will be give to apis and no longer used in request handler,
+  // apis will take the data and free the memory in the end
+  virtual void CallingAPI(std::unique_ptr<OperateData>& data) = 0;
   // non copyable
   APIHandler(const APIHandler&) = delete;
   APIHandler& operator=(const APIHandler&) = delete;
