@@ -14,22 +14,33 @@
 #include "HttpListener.h"
 #include "RequestHandler.h"
 
-
 // will initialize http listener, do multiprocess when listener callback
 class MainManager {
  public:
   // httpListener callback, do fork and new requestHandler to call api, child
   // process add to parents vector for managing.
-  void NewRequest(const std::string &request_str);
+  void NewRequest(const int &request_fd);
   // requestHandler callback, remove process from parents vector.
   // won't be changed after forked.
   void EndRequest();
   // for managing all processes.
   // socket file descripter => pid_t
   std::unordered_map<int, pid_t> socket_map;
+  // get socket_map length
+  int GetSize();
 
   // Initlize singleton instance
   void InitInstance(const uint16_t &port_num);
+  // used for unit test, passing mock requestHandler 
+  void SetRequestHandler(const RequestHandler &request_handler);
+
+  // remove process from socket_map by socket
+  void RemoveBySocket(const int &socket_num);
+  // remove process from socket_map by pid
+  void RemoveByPid(const pid_t &p);
+  // get process by socket
+  pid_t GetProcess(int socket_num);
+
   // singleton code convention method, listen port number is required.
   static MainManager *GetInstance();
 
@@ -38,12 +49,18 @@ class MainManager {
   // Delete assignment operator
   MainManager &operator=(const MainManager &cpy) = delete;
 
- private:
+ protected:
   // singleton code convention method.
-  MainManager();
+  static MainManager *only_mainManager = nullptr;
   // used to record which port is listening, one process will listen one port
   // will call httpListener.BindPort()
   uint16_t port_num;
+  // use request_handler as factory pattern
+  RequestHandler request_handler;
+
+ private:
+  // singleton code convention method.
+  MainManager();
 };
 
 #endif
