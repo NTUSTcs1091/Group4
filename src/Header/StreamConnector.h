@@ -8,21 +8,20 @@
 #include <string>
 
 // File management for client
-class StreamConnector
-{
-public:
-    // Constructor
-    StreamConnector();
-    
-    // Not copyable or movable
-    StreamConnector(const StreamConnector &copy) = delete;
-    StreamConnector& operator = (const StreamConnector &copy) = delete;
-    
-private:
-    // Use to storage data (JSON format)
-    std::string data;
-    // Use to connect stream
-    SocketProcess sock;
+class StreamConnector {
+ public:
+  // Constructor
+  StreamConnector();
+
+  // Not copyable or movable
+  StreamConnector(const StreamConnector &copy) = delete;
+  StreamConnector &operator=(const StreamConnector &copy) = delete;
+
+ private:
+  // Use to storage data (JSON format)
+  std::string data;
+  // Use to connect stream
+  SocketProcess sock;
 };
 
 #endif /* GROUP4_SRC_STREAMCONNECTOR_H_ */

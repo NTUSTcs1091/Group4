@@ -7,24 +7,25 @@
 
 #include <string>
 
-//used to check if request is send from valid user
-//when getting request, requesthandler call authenticator::CheckAccount(account, password) check if it's valid.
-//if return true then keep handle request, false will deny the request.
-class Authenticator
-{
-public:
-    //singleton code convention method.
-    static Authenticator* GetInstance();
-    //check if login is correct
-    bool CheckAccount(const std::string &account, const std::string &password);
-    //check if account exist
-    std::string SearchAccount(const std::string &account);
-    //non copyable
-    Authenticator(Authenticator& cpy) = delete;
-    Authenticator& operator=(Authenticator& cpy) = delete;
-private:
-    //singleton code convention method.
-    Authenticator();
+// used to check if request is send from valid user
+// when getting request, requesthandler call
+// authenticator::CheckAccount(account, password) check if it's valid. if return
+// true then keep handle request, false will deny the request.
+class Authenticator {
+ public:
+  // singleton code convention method.
+  static Authenticator* GetInstance();
+  // check if login is correct
+  bool CheckAccount(const std::string& account, const std::string& password);
+  // check if account exist
+  std::string SearchAccount(const std::string& account);
+  // non copyable
+  Authenticator(Authenticator& cpy) = delete;
+  Authenticator& operator=(Authenticator& cpy) = delete;
+
+ private:
+  // singleton code convention method.
+  Authenticator();
 };
 
 #endif

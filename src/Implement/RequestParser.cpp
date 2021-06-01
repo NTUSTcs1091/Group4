@@ -30,27 +30,28 @@ Gecko/20100101 Firefox/53.0 Connection: close Content-Length: 136
   ]
 }
 */
-std::unique_ptr<OperateData> RequestParser::ParseData(const std::string& request) {
+std::unique_ptr<OperateData> RequestParser::ParseData(
+    const std::string& request) {
   std::unique_ptr<OperateData> new_data = std::make_unique<OperateData>();
-  //get POST
+  // get POST
   new_data->header["method"] = request.substr(0, request.find(" "));
-  //get url /?id=1
+  // get url /?id=1
   size_t url_key_start = request.find(" ") + 2;
   size_t url_key_end = request.find(" ", request.find(" ") + 1);
   new_data->header["url"] =
       request.substr(url_key_start, url_key_end - url_key_start);
-  //the url will give as explore/file, will be changed to explore_file
+  // the url will give as explore/file, will be changed to explore_file
   for (int i = 0; i < new_data->header["url"].length(); i++) {
     if (new_data->header["url"][i] == '/') {
       new_data->header["url"].replace(i, 1, "_");
     }
   }
-  //parse body
+  // parse body
   size_t body_start_pos = request.find("{");
   size_t body_end_pos = request.find("}");
   size_t iterate_index = body_start_pos;
-  //all the json key and value is string, so will be cut by finding "
-  //each loop will get a key and a value
+  // all the json key and value is string, so will be cut by finding "
+  // each loop will get a key and a value
   while (iterate_index < body_end_pos) {
     size_t key_start = request.find('"', iterate_index) + 1;
     size_t key_end = request.find('"', key_start);
@@ -63,6 +64,4 @@ std::unique_ptr<OperateData> RequestParser::ParseData(const std::string& request
   return std::move(new_data);
 }
 
-RequestParser::RequestParser() {
-
-}
+RequestParser::RequestParser() {}

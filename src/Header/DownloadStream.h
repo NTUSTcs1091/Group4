@@ -10,7 +10,7 @@
 
 // read file from local
 class DownloadStream {
-public:
+ public:
   // filename will include file path, set a default chunk size
   DownloadStream(const std::string &filename, const unsigned long &chunk_size);
   // if run successfully, it will return 1 else return 0
@@ -19,7 +19,7 @@ public:
   DownloadStream(const DownloadStream &) = delete;
   DownloadStream &operator=(const DownloadStream &) = delete;
 
-private:
+ private:
   // will point to the same file
   std::fstream fd;
   // filename include file path

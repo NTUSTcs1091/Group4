@@ -9,19 +9,19 @@
 
 #include "OperateData.h"
 
-//an interface for all the api which are our main services
-class APIHandler
-{
-public:
-    APIHandler();
-    //the start entry of all api services
-    virtual void CallingAPI(const OperateData &data);
-    //non copyable
-    APIHandler(const APIHandler&) = delete;
-    APIHandler& operator=(const APIHandler&) = delete;
-private:
-    //will generate response after service end or an error occured.
-    OperateData response;
+// an interface for all the api which are our main services
+class APIHandler {
+ public:
+  APIHandler();
+  // the start entry of all api services
+  virtual void CallingAPI(const OperateData& data);
+  // non copyable
+  APIHandler(const APIHandler&) = delete;
+  APIHandler& operator=(const APIHandler&) = delete;
+
+ private:
+  // will generate response after service end or an error occured.
+  OperateData response;
 };
 
 #endif
