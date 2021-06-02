@@ -17,9 +17,9 @@
 // request
 class HttpListener {
  public:
-  // Init instance
+  // Init instance, callback should pass client file descriptor
   void InitInstance(
-      std::function<void(const int &, const std::string &)> callback,
+      std::function<void(const int &fd)> callback,
       const int &port_num);
   // Singleton code convention, must bind callback for listening port and
   // require listening port
