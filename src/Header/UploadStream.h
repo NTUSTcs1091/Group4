@@ -16,8 +16,8 @@ class UploadStream {
   UploadStream(const std::string& filename);
   // This function will only append binary at the end of the file, so
   // user should handle the order yourself. If it run successfully, it will
-  // return 1 else 0.
-  int appendToFile(const std::string& binary);
+  // return 1 else 0. If end is True, then it will close the file.
+  int AppendToFile(const std::string& binary, bool end);
   // non copyable
   UploadStream(const UploadStream&) = delete;
   UploadStream& operator=(const UploadStream&) = delete;
@@ -27,6 +27,8 @@ class UploadStream {
   std::fstream fd;
   // filename include file path
   std::string filename;
+  // True indicate that it has the write access of the file, otherwise.
+  bool writing = false;
 };
 
 #endif
