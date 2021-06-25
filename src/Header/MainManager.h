@@ -51,7 +51,7 @@ class MainManager {
 
  protected:
   // singleton code convention method.
-  static MainManager *only_mainManager = nullptr;
+  static MainManager *only_mainManager
   // used to record which port is listening, one process will listen one port
   // will call httpListener.BindPort()
   uint16_t port_num;
