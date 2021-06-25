@@ -9,6 +9,7 @@
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <sys/types.h>
+#include <unistd.h>
 
 #include <functional>
 #include <thread>
@@ -18,9 +19,8 @@
 class HttpListener {
  public:
   // Init instance, callback should pass client file descriptor
-  void InitInstance(
-      std::function<void(const int &fd)> callback,
-      const int &port_num);
+  void InitInstance(std::function<void(const int &fd)> callback,
+                    const int &port_num);
   // Singleton code convention, must bind callback for listening port and
   // require listening port
   static HttpListener *GetInstance();
@@ -33,6 +33,9 @@ class HttpListener {
   void StartListen();
   // stop listening and turn off multithread.
   void EndListen();
+  // stop listening
+  void StopListen();
+  ~HttpListener(void);
   // non copyable
   HttpListener(HttpListener &cpy) = delete;
   HttpListener &operator=(const HttpListener &cpy) = delete;
@@ -49,7 +52,7 @@ class HttpListener {
   int client_fd;
   int server_fd;
   bool start_listen;
-  std::shared_ptr<std::thread> listen_thread;
+  std::thread listen_thread;
   static HttpListener *only_http_listener;
 };
 

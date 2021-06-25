@@ -22,11 +22,12 @@ class RequestHandler {
   // assign accepted file descriptor, will receive request
   // string and parse to OperateData, then check with Authenticator and call
   // correspond api.
-  void SetFd(const int &file_descriptor);
+  virtual void SetFd(const int &file_descriptor);
   // only get the header part
   int ReadHeader(std::string *header, std::string *msg_over_header);
   // only get the body part
-  std::string ReadBody(const int& content_length, const std::string &body, std::string *next_request_part);
+  std::string ReadBody(const int &content_length, const std::string &body,
+                       std::string *next_request_part);
   // receive request string and send to api
   void WaitForMessage();
   // Get client file descriptor
@@ -36,7 +37,7 @@ class RequestHandler {
   // storing all feature api
   static std::unordered_map<std::string, APIHandler *> apis;
 
- private:
+ protected:
   // file descriptor from httpListener, which will keep receiving request from
   // the same connected user
   int client_fd;

@@ -11,22 +11,21 @@
 #include "OperateData.h"
 
 // Encode the response
-class ResponseEncoder
-{
-public:
-    // Singleton code convention method.
-    static ResponseEncoder* GetInstance();
-    
-    // Encode head and body information
-    std::string Encode(const std::unique_ptr<OperateData>& data);
-    
-    // Not copyable or movable
-    ResponseEncoder(const ResponseEncoder &copy) = delete;
-    ResponseEncoder& operator = (const ResponseEncoder &copy) = delete;
-  
-private:
-    // Singleton code convention method
-    ResponseEncoder();
+class ResponseEncoder {
+ public:
+  // Singleton code convention method.
+  static ResponseEncoder* GetInstance();
+
+  // Encode head and body information
+  std::string Encode(const std::unique_ptr<OperateData>& data);
+
+  // Not copyable or movable
+  ResponseEncoder(const ResponseEncoder& copy) = delete;
+  ResponseEncoder& operator=(const ResponseEncoder& copy) = delete;
+
+ private:
+  // Singleton code convention method
+  ResponseEncoder();
 };
 
 #endif /* GROUP4_SRC_HEADER_RESPONSEENCODER_H_ */

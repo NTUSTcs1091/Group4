@@ -6,7 +6,7 @@
 
 Authenticator *Authenticator::only_authenticator = nullptr;
 
-Authenticator::Authenticator GetInstance() {
+Authenticator *Authenticator::GetInstance() {
   if (only_authenticator == nullptr) {
     only_authenticator = new Authenticator();
   }
@@ -23,3 +23,5 @@ bool Authenticator::CheckAccount(const std::string &account,
 std::string Authenticator::SearchAccount(const std::string &account) {
   return "";
 }
+
+Authenticator::Authenticator() {}

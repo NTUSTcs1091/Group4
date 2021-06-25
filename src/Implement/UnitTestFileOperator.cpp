@@ -15,7 +15,7 @@
 //#include "FileOperator.h"
 //#include "OperateData.h"
 //
-//namespace  {
+// namespace  {
 //    const uint16_t test_port = 9000;
 //    std::string temp_response = "";
 //
@@ -39,7 +39,7 @@
 //}
 //
 //// test with a sudo string data
-//TEST(FILEOPERATOR_TEST, Basic) {
+// TEST(FILEOPERATOR_TEST, Basic) {
 //    int server_fd = socket(AF_INET, SOCK_STREAM, 0);
 //    struct sockaddr_in socket_info;
 //    bzero((struct sockaddr *)&socket_info, sizeof(socket_info));
@@ -56,12 +56,14 @@
 //    std::thread test_client(TestClient);
 //
 //    int client_fd =
-//          accept(server_fd, (struct sockaddr *)&client_socket_info, &addr_len);
+//          accept(server_fd, (struct sockaddr *)&client_socket_info,
+//          &addr_len);
 //
-//    std::unique_ptr<OperateData> operate_data = std::make_unique<OperateData>();
+//    std::unique_ptr<OperateData> operate_data =
+//    std::make_unique<OperateData>();
 //
-//    operate_data->header["client_file_descriptor"] = std::to_string(client_fd);;
-//    operate_data->header["method"] = "POST";
+//    operate_data->header["client_file_descriptor"] =
+//    std::to_string(client_fd);; operate_data->header["method"] = "POST";
 //    operate_data->header["url"] = "http://test.com";
 //    operate_data->body["path"] = "usr/local/test.txt";
 //    operate_data->body["data"] = "a";

@@ -16,7 +16,7 @@
 #include "RequestHandler.h"
 
 namespace {
-uint16_t test_port = 9000;
+uint16_t test_port = 9002;
 
 void TestClient() {
   int sockfd = 0;
@@ -61,6 +61,7 @@ TEST(TEST_RequestHandler, GetMessage_Short) {
   listen(server_fd, 1);
   struct sockaddr_in client_socket_info;
   socklen_t addr_len = sizeof(client_socket_info);
+  sleep(1);
   TestClient();
   int client_fd =
       accept(server_fd, (struct sockaddr *)&client_socket_info, &addr_len);
@@ -74,5 +75,7 @@ TEST(TEST_RequestHandler, GetMessage_Short) {
   EXPECT_EQ("testPath/myFile/filename.txt", request_handler.data->body["path"]);
   EXPECT_EQ("0", request_handler.data->body["pos"]);
   EXPECT_EQ("0123456789", request_handler.data->body["data"]);
+  shutdown(server_fd, SHUT_RDWR);
+  close(server_fd);
   test_wait.join();
 }

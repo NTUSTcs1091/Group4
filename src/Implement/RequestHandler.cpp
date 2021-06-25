@@ -32,7 +32,7 @@ int RequestHandler::ReadHeader(std::string *header,
       return -1;
     }
     // add read buffer to header
-    *header += string(input_buffer, msg_read);
+    *header += std::string(input_buffer, msg_read);
     // find \r\n\r\n to get end of header
     size_t start_cut_pos = header->find(find_key, 0) + find_key.length() + 1;
     size_t end_cut_pos = header->find(end_of_header, 0);
@@ -40,7 +40,7 @@ int RequestHandler::ReadHeader(std::string *header,
       size_t header_size = end_cut_pos + end_of_header.length();
       try {
         // no content_length means body size = 0
-        if(start_cut_pos == std::string::npos){
+        if (start_cut_pos == std::string::npos) {
           *msg_over_header = "";
           *header = header->substr(0, header_size);
           return 0;
@@ -67,15 +67,15 @@ std::string RequestHandler::ReadBody(const int &content_length,
   std::string result = "";
   std::string buffer_result = "";
   int string_length_needed = content_length - body.length();
-  //will keep reading until complete message received
+  // will keep reading until complete message received
   while (string_length_needed > 0) {
     // buffer size is decided by content-length and length header has read
     char input_buffer[string_length_needed];
     int msg_read = recv(this->client_fd, input_buffer, sizeof(input_buffer), 0);
-    buffer_result += string(input_buffer, msg_read);
+    buffer_result += std::string(input_buffer, msg_read);
     string_length_needed -= msg_read;
-    if(msg_read < 0){
-      //TODO: error handle
+    if (msg_read < 0) {
+      // TODO: error handle
     }
   }
   // maybe first request is too short that already get info from second header,
@@ -104,7 +104,7 @@ void RequestHandler::WaitForMessage() {
         ReadBody(client_content_length, msg_over_header, &next_request);
     // parse message to OperateData
     RequestParser *tmp_parser = RequestParser::GetInstance();
-    this->data = tmp_parser->ParseData(&complete_request);
+    this->data = tmp_parser->ParseData(complete_request);
     this->data->header["client_file_descriptor"] =
         std::to_string(this->client_fd);
     const std::string api_name = this->data->header["Method"];

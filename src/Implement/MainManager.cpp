@@ -5,12 +5,12 @@ MainManager *MainManager::only_mainManager = nullptr;
 namespace {
 void SigHandle(int sig, siginfo_t *info, void *ctx) {
   if (sig == SIGUSR1) {
-    mainManager.RemoveByPid(info->si_pid);
+    MainManager::GetInstance()->RemoveByPid(info->si_pid);
   }
 }
 }  // namespace
 
-void MainManager::SetRequestHandler(const RequestHandler &request_handler) {
+void MainManager::SetRequestHandler(RequestHandler *request_handler) {
   this->request_handler = request_handler;
 }
 
@@ -26,10 +26,14 @@ void MainManager::InitInstance(const uint16_t &port_num) {
   // SIGUSR1 is used for customized kill command, which will make parent process
   // remove child processfrom socket_map
   sigaction(SIGUSR1, &act, NULL);
-  request_handler = RequestHandler();
-  HttpListener listen_socket = HttpListener::GetInstance();
-  listen_socket.InitInstance(this->NewRequest, port_num);
-  listen_socket.StartListen();
+  request_handler = new RequestHandler();
+  HttpListener *listen_socket = HttpListener::GetInstance();
+
+  listen_socket->InitInstance(
+      std::bind(&MainManager::NewRequest, this, std::placeholders::_1),
+      port_num);
+      
+  listen_socket->StartListen();
 }
 
 MainManager *MainManager::GetInstance() {
@@ -49,8 +53,8 @@ void MainManager::NewRequest(const int &socket_fd) {
   // requestHandler in parent process will never need to handle request, so
   // .SetFd can be used repeatly.
   else if (child_pid == 0) {
-    request_handler.SetFd(socket_fd);
-    request_handler.WaitForMessage();
+    request_handler->SetFd(socket_fd);
+    request_handler->WaitForMessage();
   }
   // fork failed
   else {
@@ -74,7 +78,7 @@ void MainManager::RemoveByPid(const pid_t &p) {
   for (std::unordered_map<int, pid_t>::iterator find_process =
            socket_map.begin();
        find_process != socket_map.end();) {
-    if (i->second == p) {
+    if (find_process->second == p) {
       find_process = socket_map.erase(find_process);
     } else {
       ++find_process;
@@ -88,3 +92,9 @@ void MainManager::RemoveByPid(const pid_t &p) {
 pid_t MainManager::GetProcess(int socket_num) { return socket_map[socket_num]; }
 
 int MainManager::GetSize() { return socket_map.size(); }
+
+void MainManager::StopListen() { HttpListener::GetInstance()->StopListen(); }
+
+MainManager::MainManager() {}
+
+MainManager::~MainManager(void){ this->StopListen(); }

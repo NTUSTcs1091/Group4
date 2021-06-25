@@ -23,7 +23,8 @@ class Authenticator {
   Authenticator(Authenticator& cpy) = delete;
   Authenticator& operator=(Authenticator& cpy) = delete;
 
-  protect : static Authenticator* only_authenticator;
+ protected:
+  static Authenticator* only_authenticator;
 
  private:
   // singleton code convention method.

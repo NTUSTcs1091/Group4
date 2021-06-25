@@ -6,9 +6,8 @@
 
 HttpListener *HttpListener::only_http_listener = nullptr;
 
-void HttpListener::InitInstance(
-    std::function<void(const int &)> callback,
-    const int &port_num) {
+void HttpListener::InitInstance(std::function<void(const int &)> callback,
+                                const int &port_num) {
   this->callback = callback;
   this->BindPort(port_num);
 }
@@ -26,8 +25,8 @@ void HttpListener::BindPort(const int &port_num) {
 
   if (this->server_fd == -1) {
     // printf("Fail to create a socket.");
-    //TODO:
-    //Use Logger from other teammate
+    // TODO:
+    // Use Logger from other teammate
     return;
   }
   bzero((struct sockaddr *)&socket_info, sizeof(socket_info));
@@ -36,15 +35,17 @@ void HttpListener::BindPort(const int &port_num) {
   socket_info.sin_port = htons(port_num);
   bind(this->server_fd, (struct sockaddr *)&socket_info,
        (socklen_t)sizeof(socket_info));
-  listen(this->server_fd, 1);
-};
+  if(listen(this->server_fd, 1) < 0){
+    // std::cout<<"bind port failed"<<std::endl;
+  }  
+}
 
 void HttpListener::ThreadListen() {
   struct sockaddr_in client_socket_info;
   socklen_t addr_len = sizeof(client_socket_info);
   while (start_listen) {
     this->client_fd = accept(this->server_fd,
-                             (struct sockaddr *)&client_socket_info, &addr_len);
+                             (struct sockaddr *)&client_socket_info, &addr_len);  
     this->callback(this->client_fd);
   }
 }
@@ -60,7 +61,13 @@ void HttpListener::EndListen() {
   this->listen_thread.join();
 }
 
-HttpListener::HttpListener() { 
-  this->start_listen = false; 
-};
+void HttpListener::StopListen(){ 
+  shutdown(this->server_fd, SHUT_RDWR); 
+  EndListen();
+}
 
+
+
+HttpListener::HttpListener() { this->start_listen = false; }
+
+HttpListener::~HttpListener(void){ this->StopListen(); }

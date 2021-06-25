@@ -11,18 +11,18 @@
 #include "OperateData.h"
 
 // Handle response and call corresponding service
-class ResponseHandler
-{
-public:
-    // Constructor
-    ResponseHandler();
-    
-    // Send data and header to corresponding service
-    void Send(const std::string &for_client_fd, std::unique_ptr<OperateData> data);
-    
-    // Not copyable or movable
-    ResponseHandler(const ResponseHandler &copy) = delete;
-    ResponseHandler& operator = (const ResponseHandler &copy) = delete;
+class ResponseHandler {
+ public:
+  // Constructor
+  ResponseHandler();
+
+  // Send data and header to corresponding service
+  void Send(const std::string &for_client_fd,
+            std::unique_ptr<OperateData> data);
+
+  // Not copyable or movable
+  ResponseHandler(const ResponseHandler &copy) = delete;
+  ResponseHandler &operator=(const ResponseHandler &copy) = delete;
 };
 
 #endif /* GROUP4_SRC_HEADER_RESPONSEHANDLER_H_ */

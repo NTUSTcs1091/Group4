@@ -7,9 +7,8 @@
 #include <gtest/gtest.h>
 #include <unistd.h>
 
-#include <iostream>
-
 #include "HttpListener.h"
+
 namespace {
 class TestCallback {
  public:
@@ -18,7 +17,9 @@ class TestCallback {
   }
   static bool test_callback;
 };
-const uint16_t *test_port = 9000;
+
+const uint16_t test_port = 9004;
+
 bool TestCallback::test_callback = false;
 
 void TestClient() {
@@ -28,7 +29,7 @@ void TestClient() {
   bzero(&info, sizeof(info));
   info.sin_family = PF_INET;
   info.sin_addr.s_addr = inet_addr("127.0.0.1");
-  info.sin_port = htons(*test_port);
+  info.sin_port = htons(test_port);
   int err = connect(sockfd, (struct sockaddr *)&info, sizeof(info));
   std::string test_string = "POST /explorer/file HTTP/1.1\n";
   test_string += "Host: echo.paw.cloud\n";
@@ -43,8 +44,8 @@ void TestClient() {
   test_string += "\"pos\":\"0\",";
   test_string += "\"data\":\"123456789\"";
   test_string += "}";
-  const char *message = test_string.c_str();
-  send(sockfd, message, test_string.length(), 0);
+  //const char *message = test_string.c_str();
+  //send(sockfd, message, test_string.length(), 0);
   close(sockfd);
 }
 }  // namespace
@@ -53,7 +54,9 @@ TEST(HttpListener_MOCK, Listening) {
   HttpListener *http_listener = HttpListener::GetInstance();
   http_listener->InitInstance(TestCallback::TestCallbackFunction, test_port);
   http_listener->StartListen();
+  sleep(1);
   TestClient();
   sleep(1);
   EXPECT_TRUE(TestCallback::test_callback);
+  http_listener->StopListen();
 }

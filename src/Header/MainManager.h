@@ -5,7 +5,10 @@
 #ifndef Group4_Header_MainManager_H_
 #define Group4_Header_MainManager_H_
 
+#include <arpa/inet.h>
 #include <netinet/in.h>
+#include <signal.h>
+#include <unistd.h>
 
 #include <string>
 #include <unordered_map>
@@ -31,8 +34,8 @@ class MainManager {
 
   // Initlize singleton instance
   void InitInstance(const uint16_t &port_num);
-  // used for unit test, passing mock requestHandler 
-  void SetRequestHandler(const RequestHandler &request_handler);
+  // used for unit test, passing mock requestHandler
+  void SetRequestHandler(RequestHandler *request_handler);
 
   // remove process from socket_map by socket
   void RemoveBySocket(const int &socket_num);
@@ -40,9 +43,13 @@ class MainManager {
   void RemoveByPid(const pid_t &p);
   // get process by socket
   pid_t GetProcess(int socket_num);
+  // stop listening
+  void StopListen();
 
   // singleton code convention method, listen port number is required.
   static MainManager *GetInstance();
+
+  ~MainManager(void);
 
   // Delete copy constructor
   MainManager(const MainManager &cpy) = delete;
@@ -51,13 +58,13 @@ class MainManager {
 
  protected:
   // singleton code convention method.
-  static MainManager *only_mainManager
+  static MainManager *only_mainManager;
   // used to record which port is listening, one process will listen one port
   // will call httpListener.BindPort()
   uint16_t port_num;
   // use request_handler as factory pattern
-  RequestHandler request_handler;
-
+  RequestHandler *request_handler;
+  
  private:
   // singleton code convention method.
   MainManager();
