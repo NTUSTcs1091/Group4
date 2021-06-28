@@ -4,8 +4,6 @@
 
 #include "FileOperator.h"
 
-#include <iostream>
-
 #include "DownloadStream.h"
 #include "ResponseHandler.h"
 #include "UploadStream.h"
@@ -54,13 +52,11 @@ void FileOperator::CallingAPI(std::unique_ptr<OperateData> data) {
 
   // OperatorData for response
   std::unique_ptr<OperateData> response = std::make_unique<OperateData>();
-
   try {
     // Upload
     if (method == "POST") {
       response->body["is_uploaded_file_end"] = data->body["is_end"];
       response->header["status_code"] = std::to_string(Upload(std::move(data)));
-
       if (std::stoi(response->header["status_code"]) == 200) {
         response->body["service"] = "Upload";
         response->body["success"] = "true";

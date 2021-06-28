@@ -1,3 +1,7 @@
+// Copyright (c) 2021, 鍾淯丞, 周杰仕, 林仁鴻. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 #include "MainManager.h"
 
 MainManager *MainManager::only_mainManager = nullptr;
@@ -32,7 +36,7 @@ void MainManager::InitInstance(const uint16_t &port_num) {
   listen_socket->InitInstance(
       std::bind(&MainManager::NewRequest, this, std::placeholders::_1),
       port_num);
-      
+
   listen_socket->StartListen();
 }
 
@@ -97,4 +101,4 @@ void MainManager::StopListen() { HttpListener::GetInstance()->StopListen(); }
 
 MainManager::MainManager() {}
 
-MainManager::~MainManager(void){ this->StopListen(); }
+MainManager::~MainManager(void) { this->StopListen(); }

@@ -11,7 +11,11 @@
 
 #include <string>
 
-std::unordered_map<std::string, APIHandler *> RequestHandler::apis;
+#include "FileOperator.h"
+
+std::unordered_map<std::string, APIHandler *> RequestHandler::apis = {
+    {"POST_explorer_file", new FileOperator()},
+    {"GET_explorer_file", new FileOperator()}};
 
 RequestHandler::RequestHandler() { this->read_size = 4096; }
 
@@ -107,7 +111,8 @@ void RequestHandler::WaitForMessage() {
     this->data = tmp_parser->ParseData(complete_request);
     this->data->header["client_file_descriptor"] =
         std::to_string(this->client_fd);
-    const std::string api_name = this->data->header["Method"];
+    const std::string api_name =
+        this->data->header["method"] + "_" + this->data->header["url"];
     APIHandler *api_handler = RequestHandler::apis[api_name];
     if (api_handler == nullptr) {
       // should call error, wrong api calling will terminate receiving

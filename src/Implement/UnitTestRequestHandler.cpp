@@ -33,7 +33,7 @@ void TestClient() {
   test_body += "\"pos\":\"0\",";
   test_body += "\"data\":\"0123456789\"";
   test_body += "}";
-  std::string test_string = "POST /explorer/file HTTP/1.1\n";
+  std::string test_string = "POST /explorerfile HTTP/1.1\n";
   test_string += "Host: echo.paw.cloud\n";
   test_string += "Content-Type: application/json; charset=utf-8\n";
   test_string +=
@@ -71,7 +71,7 @@ TEST(TEST_RequestHandler, GetMessage_Short) {
       std::thread(&RequestHandler::WaitForMessage, &request_handler);
   sleep(1);
   EXPECT_EQ("POST", request_handler.data->header["method"]);
-  EXPECT_EQ("explorer_file", request_handler.data->header["url"]);
+  EXPECT_EQ("explorerfile", request_handler.data->header["url"]);
   EXPECT_EQ("testPath/myFile/filename.txt", request_handler.data->body["path"]);
   EXPECT_EQ("0", request_handler.data->body["pos"]);
   EXPECT_EQ("0123456789", request_handler.data->body["data"]);
