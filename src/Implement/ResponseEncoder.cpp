@@ -6,6 +6,7 @@
 
 #include "OperateData.h"
 
+
 ResponseEncoder* only_response_encoder = nullptr;
 
 ResponseEncoder* ResponseEncoder::GetInstance() {

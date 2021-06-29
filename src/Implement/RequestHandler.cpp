@@ -85,8 +85,10 @@ std::string RequestHandler::ReadBody(const int &content_length,
   // maybe first request is too short that already get info from second header,
   // need to be removed
   result = body.substr(0, content_length) + buffer_result;
-  *next_request_part =
-      body.substr(content_length, body.length() - content_length);
+  if (body.length() > content_length) {
+    *next_request_part =
+        body.substr(content_length, body.length() - content_length);
+  }
   return result;
 }
 

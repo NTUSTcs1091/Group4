@@ -9,8 +9,9 @@
 // test basic usage
 TEST(DOWNLOADSTREAM_TEST, Basic) {
   // create temporary test file
-  std::fstream newfile("test", std::fstream::out);
-  constexpr char kTestFileContent[] = "123\n\n456";
+  std::fstream newfile("test", std::ios::out | std::ios::binary);
+  constexpr char kTestFileContent[] =
+      "\x31\x32\x33\x0A\x0A\x34\x35\x36";  // "123\n\n456"
   newfile << kTestFileContent;
   newfile.close();
   int file_length = sizeof(kTestFileContent) / sizeof(char);
@@ -21,12 +22,12 @@ TEST(DOWNLOADSTREAM_TEST, Basic) {
   int result;
 
   // check ReadChunk
+  std::string temp = "";
   for (pos = 0; pos < file_length - 1; pos++) {
     result = down.ReadChunk(pos, &binary);
     ASSERT_EQ(1, result);
-    std::string temp = "";
-    temp += kTestFileContent[pos];
-    EXPECT_EQ(temp, binary);
+    EXPECT_EQ(kTestFileContent[pos],
+              static_cast<char>(std::stoi(binary, 0, 16)));
   }
   // check EOF
   result = down.ReadChunk(pos, &binary);

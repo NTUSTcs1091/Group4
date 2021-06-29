@@ -27,6 +27,8 @@ class DownloadStream {
   std::string filename;
   // default chunk size
   unsigned long chunk_size;
+  // this would be chunk_size, when chunk_size is smaller then the file size
+  unsigned long sstream_size;
 };
 
 #endif
