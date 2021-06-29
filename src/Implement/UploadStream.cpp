@@ -12,9 +12,7 @@ UploadStream::UploadStream(const std::string& filename) : filename(filename) {
   if (checklock.fail()) {
     std::fstream lockfile(filename + ".lock", std::fstream::out);
     lockfile.close();
-    fd.open(filename, std::fstream::out | std::fstream::trunc);
-    fd.close();
-    fd.open(filename, std::fstream::app);
+    fd.open(filename, std::ios::out | std::ios::binary | std::ios::trunc);
   } else {
     fd.setstate(std::ios::failbit);
     fd.setstate(std::ios::badbit);
@@ -26,7 +24,16 @@ int UploadStream::AppendToFile(const std::string& binary, bool end) {
   if (fd.fail()) {
     return 0;
   }
-  fd << binary;
+
+  int half_length = binary.length() / 2;
+  char buff[half_length + 1];
+  buff[half_length] = '\0';
+
+  for (int pos = 0; pos < half_length; pos++) {
+    buff[pos] = '\0' + std::stoi(binary.substr(pos * 2, 2), 0, 16);
+  }
+
+  fd.write(buff, half_length);
   if (end) {
     fd.close();
     std::remove(filename.append(".lock").c_str());

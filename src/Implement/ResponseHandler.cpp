@@ -16,6 +16,7 @@ void ResponseHandler::Send(const std::string &for_client_fd,
   ResponseEncoder *encoder = ResponseEncoder::GetInstance();
   // Encode header and body to OperateData
   std::string response = encoder->Encode(data);
+
   try {
     send(std::stoi(for_client_fd), response.c_str(), response.length(), 0);
   } catch (std::invalid_argument &e) {
