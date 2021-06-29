@@ -21,6 +21,35 @@ find_package(GTest REQUIRED)
 
 include(GoogleTest)
 
+set(BasicFile 
+			src/Implement/Authenticator.cpp
+			src/Implement/OperateData.cpp
+			src/Implement/DownloadStream.cpp
+			src/Implement/RequestHandler.cpp
+			src/Implement/FileOperator.cpp
+			src/Implement/RequestParser.cpp
+			src/Implement/HttpListener.cpp
+			src/Implement/ResponseEncoder.cpp
+			src/Implement/LogHandle.cpp
+			src/Implement/ResponseHandler.cpp
+			src/Implement/MainManager.cpp
+			src/Implement/UploadStream.cpp
+			
+			src/Header/APIHandler.h
+			src/Header/FileOperator.h
+			src/Header/MainManager.h
+			src/Header/RequestParser.h
+			src/Header/Authenticator.h
+			src/Header/HttpListener.h
+			src/Header/OperateData.h
+			src/Header/ResponseEncoder.h
+			src/Header/DownloadStream.h
+			src/Header/LogHandle.h
+			src/Header/RequestHandler.h
+			src/Header/ResponseHandler.h
+			src/Header/UploadStream.h
+			)
+
 if(UNIX)
 add_executable(UnitTest 
 # Made by younger15
@@ -50,57 +79,38 @@ add_executable(UnitTest
 #			src/Header/RequestParser.h
 #			src/Implement/OperateData.cpp
 #			src/Header/OperateData.h
-
-
-
-			src/Implement/Authenticator.cpp
-			src/Implement/OperateData.cpp
-			src/Implement/DownloadStream.cpp
-			src/Implement/RequestHandler.cpp
-			src/Implement/FileOperator.cpp
-			src/Implement/RequestParser.cpp
-			src/Implement/HttpListener.cpp
-			src/Implement/ResponseEncoder.cpp
-			src/Implement/LogHandle.cpp
-			src/Implement/ResponseHandler.cpp
-			src/Implement/MainManager.cpp
-			src/Implement/UploadStream.cpp
+			${BasicFile}
+			
 			src/Implement/UnitTestMainManager.cpp
 			src/Implement/UnitTestResponseHandler.cpp
 			src/Implement/UnitTestDownloadStream.cpp
 			src/Implement/UnitTestRequestHandler.cpp
 			src/Implement/UnitTestRequestParser.cpp
-			# src/Implement/UnitTestFileOperator.cpp
+			src/Implement/UnitTestFileOperator.cpp
 			src/Implement/UnitTestResponseEncoder.cpp
 			src/Implement/UnitTestLogHandle.cpp
 			src/Implement/UnitTestOperateData.cpp
 			src/Implement/UnitTestUploadStream.cpp
 			src/Implement/UnitTestAuthenticator.cpp
 			src/Implement/UnitTestHttpListener.cpp
-			
-			src/Header/APIHandler.h
-			src/Header/FileOperator.h
-			src/Header/MainManager.h
-			src/Header/RequestParser.h
-			src/Header/Authenticator.h
-			src/Header/HttpListener.h
-			src/Header/OperateData.h
-			src/Header/ResponseEncoder.h
-			src/Header/DownloadStream.h
-			src/Header/LogHandle.h
-			src/Header/RequestHandler.h
-			src/Header/ResponseHandler.h
-			src/Header/UploadStream.h
 			)
+
+add_executable(Server 
+			${BasicFile}
+			src/main.cpp
+			)
+
 # command between 3.16 and 3.20 for gtest is different
 if(CMAKE_MINOR_VERSION LESS 20})
 	target_link_libraries(UnitTest pthread GTest::GTest GTest::Main)
+	target_link_libraries(Server pthread GTest::GTest GTest::Main)
 else()
 	target_link_libraries(UnitTest pthread GTest::gtest GTest::gtest_main GTest::gmock GTest::gmock_main)
+	target_link_libraries(Server pthread GTest::gtest GTest::gtest_main GTest::gmock GTest::gmock_main)
 endif()
-gtest_discover_tests(UnitTest)
-add_test(UnitTest_test UnitTest)
+	gtest_discover_tests(UnitTest)
+	add_test(UnitTest_test UnitTest)
 else()
-message( FATAL_ERROR "must be Linux based OS")
+	message( FATAL_ERROR "must be Linux based OS")
 endif()
 

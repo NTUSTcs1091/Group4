@@ -23,16 +23,29 @@ std::string ResponseEncoder::Encode(const std::unique_ptr<OperateData>& data) {
   else
     result_response += "Internal Server Error\n";
 
+  std::string result_response_body = "{\n";
+  for (auto kv : data->body) {
+    result_response_body +=
+        '"' + kv.first + "\": " + '"' + kv.second + "\"," + '\n';
+  }
+  result_response_body += "}\n";
+
   for (auto kv : data->header) {
     if (kv.first == "status_code" || kv.first == "status") continue;
     result_response += kv.first + ": " + kv.second + '\n';
   }
+  char buf[30];
+  buf[29] = '\0';
+  time_t now = time(0);
+  struct tm tm = *gmtime(&now);
+  strftime(buf, 30, "%a, %d %b %Y %H:%M:%S %Z", &tm);
+  result_response = result_response + "Date: " + buf + '\n';
+  result_response +=
+      "Content-Length: " + std::to_string(result_response_body.length()) + '\n';
+  result_response += "Content-Type: application/json\n";
+  result_response += "Connection: Closed\n\n";
 
-  result_response += "{\n";
-  for (auto kv : data->body) {
-    result_response += '\t' + kv.first + ": " + kv.second + '\n';
-  }
-  result_response += "}\n";
+  result_response += result_response_body;
 
   return result_response;
 }

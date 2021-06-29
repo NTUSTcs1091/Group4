@@ -4,6 +4,8 @@
 
 #include "HttpListener.h"
 
+#include <arpa/inet.h>
+
 HttpListener *HttpListener::only_http_listener = nullptr;
 
 void HttpListener::InitInstance(std::function<void(const int &)> callback,
@@ -35,9 +37,9 @@ void HttpListener::BindPort(const int &port_num) {
   socket_info.sin_port = htons(port_num);
   bind(this->server_fd, (struct sockaddr *)&socket_info,
        (socklen_t)sizeof(socket_info));
-  if(listen(this->server_fd, 1) < 0){
+  if (listen(this->server_fd, 1) < 0) {
     // std::cout<<"bind port failed"<<std::endl;
-  }  
+  }
 }
 
 void HttpListener::ThreadListen() {
@@ -45,7 +47,7 @@ void HttpListener::ThreadListen() {
   socklen_t addr_len = sizeof(client_socket_info);
   while (start_listen) {
     this->client_fd = accept(this->server_fd,
-                             (struct sockaddr *)&client_socket_info, &addr_len);  
+                             (struct sockaddr *)&client_socket_info, &addr_len);
     this->callback(this->client_fd);
   }
 }
@@ -61,13 +63,11 @@ void HttpListener::EndListen() {
   this->listen_thread.join();
 }
 
-void HttpListener::StopListen(){ 
-  shutdown(this->server_fd, SHUT_RDWR); 
+void HttpListener::StopListen() {
+  shutdown(this->server_fd, SHUT_RDWR);
   EndListen();
 }
 
-
-
 HttpListener::HttpListener() { this->start_listen = false; }
 
-HttpListener::~HttpListener(void){ this->StopListen(); }
+HttpListener::~HttpListener(void) { this->StopListen(); }

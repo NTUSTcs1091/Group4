@@ -66,13 +66,20 @@ TEST(RESPONSEHANDLER_TEST, Basic) {
   // Send to client
   response_handler.Send(std::to_string(client_fd), std::move(response));
   test_client.join();
+
   std::string correct_response = "HTTP/1.1 500 Internal Server Error\n";
+  correct_response += "Content-Length: 85\n";
+  correct_response += "Content-Type: application/json\n";
+  correct_response += "Connection: Closed\n\n";
   correct_response += "{\n";
   correct_response +=
-      "\terror_message: Something error occurred in POST method.\n";
-  correct_response += "\tsuccess: False\n";
+      "\"error_message\": \"Something error occurred in POST method.\",\n";
+  correct_response += "\"success\": \"False\",\n";
   correct_response += "}\n";
 
-  EXPECT_EQ(correct_response, temp_response);
+  EXPECT_EQ(correct_response,
+            temp_response.substr(0, temp_response.find("Date", 0)) +
+                temp_response.substr(temp_response.find("Content-Length", 0),
+                                     std::string::npos));
   close(server_fd);
 }
